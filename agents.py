@@ -4,16 +4,29 @@ class IDS_agent:
 
     def DLS(self, state, limit):
         frontier = [state]
+        solution = []
         while frontier:
-            node = frontier.pop()
-            if self.puzzle.is_goal(node):
-                return node
 
-            if node.depth > limit:
-                return None
+            #debug
+            # print(len(frontier) , "*************************")
+
+            node = frontier.pop()
+
+            if len(solution) > node.depth:
+                solution = solution[:node.depth]
+            solution.append(node)
+
+
+            if self.puzzle.is_goal(node):
+                return solution
+
+            if node.depth >= limit:
+                if len(frontier)== 0:
+                    return None
             else:
                 for child in self.puzzle.successor(node):
                     frontier.append(child)
+
         return False
 
     def IDS(self, max_depth):
