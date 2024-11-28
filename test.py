@@ -1,8 +1,9 @@
 import snake_cube
 import agents
+import copy
 
 
-puzzle = snake_cube.snake_cube(initial_coordinates={
+puzzle_1 = snake_cube.snake_cube(initial_coordinates={
     1: [2, 0, 3],
     2: [2, 0, 2],
     3: [2, 0, 1],
@@ -32,6 +33,7 @@ puzzle = snake_cube.snake_cube(initial_coordinates={
     27: [0, 0, -3]
 })
 
+puzzle_2 = copy.deepcopy(puzzle_1)
 
 # puzzle = snake_cube.snake_cube(initial_coordinates={
 #     1: [-5, 2, -6],
@@ -63,7 +65,7 @@ puzzle = snake_cube.snake_cube(initial_coordinates={
 #     27: [7, 0, 6]
 # })
 
-agent = agents.IDS_agent(puzzle)
+agent = agents.IDS_agent(puzzle_1)
 
 solution = agent.IDS(max_depth=5)
 
@@ -72,17 +74,20 @@ if solution:
     for node in solution:
         print("depth :", node.depth ,"------------------------------------")
         node.show()
+    print(puzzle_1.num_nude_examined)
 else:
     print("No solution found.")
 
 
-# puzzle = snake_cube.snake_cube()
-# agent = agents.RBFS_agent(puzzle)
+print("_________________________________________________________________________________________________________")
 
-# solution = agent.RECURSIVE_BEST_FIRST_SEARCH()
+agent = agents.RBFS_agent(puzzle_2)
 
-# if solution != None:
-#     print("Solution found:")
-#     solution.show()
-# else:
-#     print("No solution found.")
+solution = agent.RECURSIVE_BEST_FIRST_SEARCH()
+
+if solution != None:
+    print("Solution found:")
+    solution.show()
+    print(puzzle_2.num_nude_examined)
+else:
+    print("No solution found.")

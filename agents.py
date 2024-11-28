@@ -1,3 +1,6 @@
+import math
+
+
 class IDS_agent:
     def __init__(self, puzzle):
         self.puzzle = puzzle
@@ -7,7 +10,7 @@ class IDS_agent:
         solution = []
         while frontier:
 
-            #debug
+            # debug
             # print(len(frontier) , "*************************")
 
             node = frontier.pop()
@@ -16,12 +19,11 @@ class IDS_agent:
                 solution = solution[:node.depth]
             solution.append(node)
 
-
             if self.puzzle.is_goal(node):
                 return solution
 
             if node.depth >= limit:
-                if len(frontier)== 0:
+                if len(frontier) == 0:
                     return None
             else:
                 for child in self.puzzle.successor(node):
@@ -44,33 +46,47 @@ class RBFS_agent:
         self.puzzle = puzzle
 
     def h(self, state):
-        pass
+
+        manhattan_distance = 0
+        for i in range(1, 28):
+            manhattan_distance += math.sqrt((self.puzzle.goal_state_Coo[i][0]-state.coordinates[i][0])**2 + (
+                self.puzzle.goal_state_Coo[i][1]-state.coordinates[i][1])**2 + (self.puzzle.goal_state_Coo[i][2]-state.coordinates[i][2])**2)
+        return manhattan_distance
 
     def RBFS(self, node, f_limit):
         if self.puzzle.is_goal(node):
-            return node, None
+            return node, -1
+        
         successors = self.puzzle.successor(node)
-        if not successors:
-            return None, 10**9
-
-        Map = {}
         for s in successors:
-            s.f = max((s.depth + self.h(s)), node.f)
-            Map[s] = s.f
+            s.f = s.depth + self.h(s)
+
+        if not successors:
+            return None, math.inf
+
+    
+        successors.sort(key=lambda s: s.f)
+
+        print("---------------------------")
 
         while True:
-            best = min(Map, key=Map.get)
-            if best > f_limit:
+            best = successors[0]
+
+            if best.f > f_limit:
                 return None, best.f
 
-            Map_without_best = Map.copy()
-            Map_without_best.pop(best)
-            alternative = min(Map_without_best.values())
+            alternative = successors[1].f if len(successors) > 1 else math.inf
+
+            #debug
+            print("f:" , best.f)
+            print("depth:" , best.depth)
 
             result, best.f = self.RBFS(best, min(f_limit, alternative))
+            successors.sort(key=lambda s: s.f)
+
             if result != None:
                 return result, best.f
 
     def RECURSIVE_BEST_FIRST_SEARCH(self):                      # ∞
-        solution, f_value = self.RBFS(self.puzzle.start_state, 10**9)
+        solution, f_value = self.RBFS(self.puzzle.start_state, math.inf)
         return solution

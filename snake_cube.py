@@ -46,7 +46,10 @@ class snake_cube:
         27: [0, 2, -1]
     }
 
+    num_nude_examined = 0
+
     def is_goal(self, state):
+        self.num_nude_examined += 1
         return list(state.coordinates.values()) == list(self.goal_state_Coo.values())
 
     def successor(self, state):
