@@ -56,10 +56,11 @@ class snake_cube:
         successors = []
 
         for piece in range(1, 28):
-            if piece in [1, 2, 6, 9, 13, 14, 15, 16, 19, 20, 22, 24, 26, 27]:
+#from wikipedia picture :  [1, 2, 6, 9, 13, 15, 16, 19, 20, 22, 24, 26, 27]
+            if piece in [1, 5, 12, 15, 16, 19, 27]:
                 continue
 
-            if piece > 14:
+            if piece >= 14:
 
                 # mehvar x
                 if state.coordinates[piece][0] != state.coordinates[piece-1][0]:
@@ -148,7 +149,7 @@ class snake_cube:
                     successors.append(new_state_180)
                     successors.append(new_state_270)
 
-            elif piece < 14:
+            elif piece <= 14:
 
                 # mehvar x
                 if state.coordinates[piece][0] != state.coordinates[piece+1][0]:
